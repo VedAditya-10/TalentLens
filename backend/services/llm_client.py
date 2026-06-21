@@ -90,8 +90,8 @@ async def _call_llm(prompt: str) -> str:
         response_format={"type": "json_object"},
         extra_body={
             "provider": {
-                "order": ["Google Vertex"],
-                "allow_fallbacks": False,
+                "order": ["google-vertex", "google-ai-studio"],
+                "allow_fallbacks": True,
             }
         },
     )
