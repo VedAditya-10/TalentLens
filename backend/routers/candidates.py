@@ -28,8 +28,9 @@ async def upload_resume(file: UploadFile = File(...), db: Session = Depends(get_
     file_bytes = await file.read()
 
     # Extract raw text
+    from fastapi.concurrency import run_in_threadpool
     try:
-        resume_text = extract_text(filename, file_bytes)
+        resume_text = await run_in_threadpool(extract_text, filename, file_bytes)
     except ValueError as e:
         raise HTTPException(status_code=422, detail=str(e))
     except RuntimeError as e:
