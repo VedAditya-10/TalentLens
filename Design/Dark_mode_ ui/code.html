@@ -1,0 +1,478 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Aura Recruit OS - Talent Leaderboard</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<style>
+        body {
+            font-family: 'Inter', sans-serif;
+            background-color: #0A0A0A;
+            color: #f6ded3;
+            overflow: hidden;
+        }
+        .custom-scrollbar::-webkit-scrollbar {
+            width: 4px;
+        }
+        .custom-scrollbar::-webkit-scrollbar-track {
+            background: #0A0A0A;
+        }
+        .custom-scrollbar::-webkit-scrollbar-thumb {
+            background: #27272A;
+            border-radius: 2px;
+        }
+        .material-symbols-outlined {
+            font-variation-settings: 'FILL' 0, 'wght' 300, 'GRAD' 0, 'opsz' 24;
+            font-size: 20px;
+        }
+        .rank-glow-1 {
+            box-shadow: 0 0 15px rgba(249, 115, 22, 0.15);
+        }
+    </style>
+<script id="tailwind-config">
+        tailwind.config = {
+          darkMode: "class",
+          theme: {
+            extend: {
+              "colors": {
+                      "on-background": "#f6ded3",
+                      "on-error-container": "#ffdad6",
+                      "on-secondary-fixed-variant": "#45464e",
+                      "error": "#ffb4ab",
+                      "secondary-container": "#45464e",
+                      "surface-bright": "#45362f",
+                      "on-primary-fixed-variant": "#783200",
+                      "inverse-surface": "#f6ded3",
+                      "tertiary-fixed": "#cde5ff",
+                      "on-secondary-fixed": "#1a1b22",
+                      "background": "#1c110b",
+                      "outline-variant": "#584237",
+                      "on-primary": "#552100",
+                      "on-tertiary": "#003351",
+                      "on-secondary": "#2f3037",
+                      "surface-container-high": "#352720",
+                      "inverse-primary": "#9d4300",
+                      "surface-dim": "#1c110b",
+                      "surface-tint": "#ffb690",
+                      "on-primary-fixed": "#341100",
+                      "primary-fixed-dim": "#ffb690",
+                      "primary-container": "#f97316",
+                      "secondary": "#c6c6cf",
+                      "primary": "#ffb690",
+                      "on-tertiary-fixed": "#001d32",
+                      "surface-container-low": "#251913",
+                      "surface-container-lowest": "#160c06",
+                      "on-error": "#690005",
+                      "tertiary-fixed-dim": "#93ccff",
+                      "tertiary": "#93ccff",
+                      "error-container": "#93000a",
+                      "on-surface": "#f6ded3",
+                      "outline": "#a78b7d",
+                      "tertiary-container": "#00a2f4",
+                      "on-tertiary-fixed-variant": "#004b74",
+                      "primary-fixed": "#ffdbca",
+                      "inverse-on-surface": "#3c2d26",
+                      "on-secondary-container": "#b4b4bd",
+                      "secondary-fixed": "#e2e1eb",
+                      "surface-container": "#291d16",
+                      "secondary-fixed-dim": "#c6c6cf",
+                      "surface-container-highest": "#40322a",
+                      "on-tertiary-container": "#003554",
+                      "surface-variant": "#40322a",
+                      "on-primary-container": "#582200",
+                      "surface": "#1c110b",
+                      "on-surface-variant": "#e0c0b1"
+              },
+              "borderRadius": {
+                      "DEFAULT": "0.125rem",
+                      "lg": "0.25rem",
+                      "xl": "0.5rem",
+                      "full": "0.75rem"
+              },
+              "spacing": {
+                      "sm": "8px",
+                      "lg": "16px",
+                      "md": "12px",
+                      "base": "4px",
+                      "margin": "16px",
+                      "xs": "4px",
+                      "xl": "24px",
+                      "gutter": "12px"
+              },
+              "fontFamily": {
+                      "headline-sm": ["Inter"],
+                      "body-md": ["Inter"],
+                      "label-md": ["Inter"]
+              },
+              "fontSize": {
+                      "headline-sm": ["18px", {"lineHeight": "24px", "letterSpacing": "-0.01em", "fontWeight": "600"}],
+                      "body-md": ["14px", {"lineHeight": "20px", "fontWeight": "400"}],
+                      "label-md": ["12px", {"lineHeight": "16px", "letterSpacing": "0.02em", "fontWeight": "500"}]
+              }
+            }
+          }
+        }
+      </script>
+</head>
+<body class="bg-black flex h-screen w-full">
+<!-- LEFT SIDEBAR: SideNavBar -->
+<aside class="fixed h-full w-[240px] left-0 top-0 bg-surface-container-low border-r border-outline-variant flex flex-col py-xl z-50">
+<div class="px-xl mb-xl">
+<h1 class="font-headline-sm text-headline-sm font-bold text-primary">Recruiter OS</h1>
+<p class="font-label-md text-label-md opacity-60">Premium Edition</p>
+</div>
+<nav class="flex-1 space-y-xs">
+<a class="flex items-center gap-md px-lg py-sm text-on-surface-variant hover:bg-surface-container-highest transition-colors duration-200" href="#">
+<span class="material-symbols-outlined">dashboard</span>
+<span class="font-label-md text-label-md">Dashboard</span>
+</a>
+<a class="flex items-center gap-md px-lg py-sm border-l-2 border-primary bg-surface-container-high text-on-surface" href="#">
+<span class="material-symbols-outlined" style="font-variation-settings: 'FILL' 1;">group</span>
+<span class="font-label-md text-label-md">Candidates</span>
+</a>
+<a class="flex items-center gap-md px-lg py-sm text-on-surface-variant hover:bg-surface-container-highest transition-colors duration-200" href="#">
+<span class="material-symbols-outlined">description</span>
+<span class="font-label-md text-label-md">Job Descriptions</span>
+</a>
+<a class="flex items-center gap-md px-lg py-sm text-on-surface-variant hover:bg-surface-container-highest transition-colors duration-200" href="#">
+<span class="material-symbols-outlined">compare_arrows</span>
+<span class="font-label-md text-label-md">Comparison</span>
+</a>
+<a class="flex items-center gap-md px-lg py-sm text-on-surface-variant hover:bg-surface-container-highest transition-colors duration-200" href="#">
+<span class="material-symbols-outlined">assessment</span>
+<span class="font-label-md text-label-md">Reports</span>
+</a>
+<a class="flex items-center gap-md px-lg py-sm text-on-surface-variant hover:bg-surface-container-highest transition-colors duration-200" href="#">
+<span class="material-symbols-outlined">settings</span>
+<span class="font-label-md text-label-md">Settings</span>
+</a>
+</nav>
+<div class="mt-auto px-xl">
+<button class="w-full bg-primary-container text-on-primary-container py-sm font-label-md rounded-lg font-bold mb-lg hover:opacity-90 transition-opacity">
+                New Search
+            </button>
+<a class="flex items-center gap-md px-lg py-sm text-on-surface-variant hover:bg-surface-container-highest transition-colors duration-200" href="#">
+<span class="material-symbols-outlined">help_outline</span>
+<span class="font-label-md text-label-md">Help Center</span>
+</a>
+</div>
+</aside>
+<!-- CENTER MAIN: Talent Leaderboard -->
+<main class="ml-[240px] mr-[320px] flex-1 flex flex-col bg-black min-h-screen">
+<!-- Top App Bar -->
+<header class="sticky top-0 z-40 h-14 px-xl bg-surface border-b border-outline-variant flex justify-between items-center">
+<div class="flex items-center gap-lg">
+<span class="font-headline-sm text-headline-sm font-black text-primary">Aura OS</span>
+<div class="h-6 w-px bg-outline-variant"></div>
+<h2 class="font-label-md text-label-md uppercase tracking-widest opacity-80">Talent Leaderboard</h2>
+</div>
+<div class="flex items-center gap-lg">
+<div class="relative">
+<span class="material-symbols-outlined absolute left-sm top-1/2 -translate-y-1/2 opacity-50">search</span>
+<input class="bg-surface-container-lowest border border-outline-variant rounded px-xl py-xs pl-xl text-label-md focus:outline-none focus:ring-1 focus:ring-primary w-48 transition-all focus:w-64" placeholder="Quick find..." type="text"/>
+</div>
+<div class="flex items-center gap-md">
+<span class="material-symbols-outlined cursor-pointer hover:text-primary transition-colors">notifications</span>
+<span class="material-symbols-outlined cursor-pointer hover:text-primary transition-colors">history</span>
+<img alt="Recruiter Profile" class="w-8 h-8 rounded-full border border-outline-variant" data-alt="A professional headshot of a high-level executive recruiter with sharp features and a confident expression. The lighting is dramatic and moody, using cool blue and warm orange tones to highlight professional authority. The background is a blurred high-tech office environment in obsidian and dark steel colors, consistent with a minimalist technical aesthetic." src="https://lh3.googleusercontent.com/aida-public/AB6AXuB9G9oiKftHaZ9E5gJXzM5YNmuWl-fQ0MBoQ41nAu-gji3X4ht1YqiYVCKtgOnM10aFwrRz3RpViM72h5lqKSRL4A879vqiTJmziQkqwLleb6Vdjlx9V-l6f1eS-IVwnbkVwm7QGPLHdIwOtIOZUOFyHSJ_TUBENrK40Z3JujAJJiUgLn108SFKwXl11J3WDtOs7PYiAEfD7unehL4jqbsNThr2BebCOCXFxntxacY7Ld3KMK3YRbAprgjtA6BagMZ94f_BLbDLBQ"/>
+</div>
+</div>
+</header>
+<!-- Filter Bar -->
+<section class="p-lg bg-[#111111] border-b border-[#27272A] flex flex-wrap gap-xs items-center">
+<span class="text-xs font-bold text-primary mr-sm">FILTERS</span>
+<!-- Filter Chips (LeetCode Style) -->
+<button class="bg-[#1A1A1A] border border-[#27272A] px-sm py-1 rounded text-[11px] font-medium flex items-center gap-1 hover:border-primary transition-colors">
+                Branch: CSE <span class="material-symbols-outlined !text-[14px]">expand_more</span>
+</button>
+<button class="bg-[#1A1A1A] border border-[#27272A] px-sm py-1 rounded text-[11px] font-medium flex items-center gap-1 hover:border-primary transition-colors">
+                Experience: 4+ Years <span class="material-symbols-outlined !text-[14px]">expand_more</span>
+</button>
+<button class="bg-[#1A1A1A] border border-[#27272A] px-sm py-1 rounded text-[11px] font-medium flex items-center gap-1 hover:border-primary transition-colors">
+                Skills: Python, AWS <span class="material-symbols-outlined !text-[14px]">expand_more</span>
+</button>
+<button class="bg-[#1A1A1A] border border-[#27272A] px-sm py-1 rounded text-[11px] font-medium flex items-center gap-1 hover:border-primary transition-colors">
+                CGPA: 8.5+ <span class="material-symbols-outlined !text-[14px]">expand_more</span>
+</button>
+<button class="bg-[#1A1A1A] border border-[#27272A] px-sm py-1 rounded text-[11px] font-medium flex items-center gap-1 hover:border-primary transition-colors">
+                Match Score: 90%+ <span class="material-symbols-outlined !text-[14px]">expand_more</span>
+</button>
+<button class="bg-[#1A1A1A] border border-[#27272A] px-sm py-1 rounded text-[11px] font-medium flex items-center gap-1 hover:border-primary transition-colors">
+                Status: Top Candidate <span class="material-symbols-outlined !text-[14px]">expand_more</span>
+</button>
+<div class="h-6 w-px bg-[#27272A] mx-xs"></div>
+<button class="text-[11px] text-primary hover:underline">Clear All</button>
+<div class="ml-auto flex items-center gap-sm">
+<span class="text-[11px] opacity-60">Sort By:</span>
+<select class="bg-transparent border-none text-[11px] font-bold text-primary p-0 focus:ring-0 cursor-pointer">
+<option>Rank High-Low</option>
+<option>Recent Activity</option>
+</select>
+</div>
+</section>
+<!-- Leaderboard Table -->
+<section class="flex-1 overflow-auto custom-scrollbar">
+<table class="w-full border-collapse">
+<thead class="sticky top-0 bg-[#0A0A0A] z-10 border-b border-[#27272A]">
+<tr class="text-left">
+<th class="p-md w-12"><input class="rounded border-[#27272A] bg-black text-primary focus:ring-primary" type="checkbox"/></th>
+<th class="p-md font-label-md text-[11px] uppercase tracking-wider opacity-60">Rank</th>
+<th class="p-md font-label-md text-[11px] uppercase tracking-wider opacity-60">Candidate</th>
+<th class="p-md font-label-md text-[11px] uppercase tracking-wider opacity-60">Match</th>
+<th class="p-md font-label-md text-[11px] uppercase tracking-wider opacity-60">Exp</th>
+<th class="p-md font-label-md text-[11px] uppercase tracking-wider opacity-60">Branch</th>
+<th class="p-md font-label-md text-[11px] uppercase tracking-wider opacity-60">Key Skills</th>
+<th class="p-md font-label-md text-[11px] uppercase tracking-wider opacity-60">Trend</th>
+<th class="p-md font-label-md text-[11px] uppercase tracking-wider opacity-60 text-right">Status</th>
+</tr>
+</thead>
+<tbody class="divide-y divide-[#27272A]">
+<!-- Marcus McKinley (Selected/Active Row) -->
+<tr class="bg-[#18181B] border-l-2 border-primary group cursor-pointer hover:bg-[#1A1A1A] transition-colors">
+<td class="p-md"><input checked="" class="rounded border-[#27272A] bg-black text-primary focus:ring-primary" type="checkbox"/></td>
+<td class="p-md">
+<span class="w-6 h-6 flex items-center justify-center rounded-full bg-primary text-black font-bold text-[11px] rank-glow-1">#1</span>
+</td>
+<td class="p-md">
+<div class="flex items-center gap-sm">
+<img alt="Marcus McKinley" class="w-8 h-8 rounded border border-[#27272A]" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCYXDFdhhSYz2PqE89UT4SEzsjQqLiewGsmNC2LqTssZc2LAdAHp23r2AYDSNg1jEVh5rbPPWuTlzNw8kqpjayP9w-qgXZ_uoQqVsgirEqQPQ5RVTBIoXoXS68gDghs9J-tQvKeQ5Px8KNLkFTNaTB6kGU9FuywRoSyRUczQb_tDUOv5DJDTOAE5wOVFcLu0oEHl3I0x8n4GVrw0nIp9VXcuamYDEKNlr6gykqwrqPjcHM-bDoqzrsVQbzDH9QaAeVze1kuW0V7ig"/>
+<div>
+<p class="font-label-md text-[13px] font-bold text-on-surface">Marcus McKinley</p>
+<p class="text-[10px] opacity-50">San Francisco, CA</p>
+</div>
+</div>
+</td>
+<td class="p-md">
+<span class="text-primary font-bold text-[13px]">94 Match</span>
+</td>
+<td class="p-md font-label-md text-[12px]">5 Years</td>
+<td class="p-md font-label-md text-[12px]">CSE</td>
+<td class="p-md">
+<div class="flex gap-xs">
+<span class="bg-[#111111] border border-[#27272A] text-[10px] px-1.5 py-0.5 rounded">Python</span>
+<span class="bg-[#111111] border border-[#27272A] text-[10px] px-1.5 py-0.5 rounded">FastAPI</span>
+<span class="bg-[#111111] border border-[#27272A] text-[10px] px-1.5 py-0.5 rounded">AWS</span>
+</div>
+</td>
+<td class="p-md">
+<div class="flex items-center text-primary gap-1">
+<span class="material-symbols-outlined !text-[16px]">trending_up</span>
+<span class="text-[11px] font-bold">2</span>
+</div>
+</td>
+<td class="p-md text-right">
+<span class="text-[10px] uppercase font-bold tracking-tighter bg-primary/10 text-primary border border-primary/20 px-2 py-1 rounded">Top Candidate</span>
+</td>
+</tr>
+<!-- Row 2 -->
+<tr class="hover:bg-[#111111] transition-colors border-l-2 border-transparent">
+<td class="p-md"><input class="rounded border-[#27272A] bg-black text-primary focus:ring-primary" type="checkbox"/></td>
+<td class="p-md"><span class="font-bold opacity-60 text-[11px]">#2</span></td>
+<td class="p-md">
+<div class="flex items-center gap-sm">
+<img alt="Elena Vance" class="w-8 h-8 rounded border border-[#27272A]" src="https://lh3.googleusercontent.com/aida-public/AB6AXuD8uZbtYl_dWxP-I9M5IBItNYBRFVIc2mQ4bvTG8S6Z-VNqAAyRJJw-Ai7nSCtNpWUyRMUaMX-_imjiCu3kuobPAqmlYcGtOD9c4kTfLVabwGck33VE7qmjEIQv3HlrTkBh4a2S-pDOz2vg89GD0Z2-7VDQJn1lCNf291Ae_24xcvN1wX10rxb6fHZHPKpOUxtSXo0g0JPKcuHJxxwhMZxRQbUtrF972SaJrQZKGxUDzAjBEVS47dOCLJKfIl3naBfYlpXJz1XQvw"/>
+<div><p class="font-label-md text-[13px] font-bold">Elena Vance</p><p class="text-[10px] opacity-50">Seattle, WA</p></div>
+</div>
+</td>
+<td class="p-md"><span class="font-bold text-[13px] text-on-surface">91 Match</span></td>
+<td class="p-md text-[12px]">6 Years</td>
+<td class="p-md text-[12px]">ECE</td>
+<td class="p-md">
+<div class="flex gap-xs">
+<span class="bg-[#111111] border border-[#27272A] text-[10px] px-1.5 py-0.5 rounded">Go</span>
+<span class="bg-[#111111] border border-[#27272A] text-[10px] px-1.5 py-0.5 rounded">Docker</span>
+</div>
+</td>
+<td class="p-md">
+<div class="flex items-center text-on-surface opacity-40 gap-1">
+<span class="material-symbols-outlined !text-[16px]">horizontal_rule</span>
+</div>
+</td>
+<td class="p-md text-right"><span class="text-[10px] font-bold bg-[#1A1A1A] text-[#A1A1AA] px-2 py-1 rounded">Screening</span></td>
+</tr>
+<!-- Multiple placeholders to simulate density -->
+<script>
+                        const candidates = [
+                            { rank: '#3', name: 'Alisa Thorne', loc: 'Austin, TX', match: '89', exp: '4y', branch: 'CSE', skills: ['React', 'TS'], trend: '+1', status: 'Shortlisted' },
+                            { rank: '#4', name: 'Damian Wright', loc: 'Berlin, DE', match: '88', exp: '7y', branch: 'IT', skills: ['Rust', 'K8s'], trend: '-1', status: 'Screening' },
+                            { rank: '#5', name: 'Suki Sato', loc: 'Tokyo, JP', match: '87', exp: '3y', branch: 'CSE', skills: ['Python', 'SQL'], trend: '+3', status: 'Shortlisted' },
+                            { rank: '#6', name: 'Jordan Belfort', loc: 'New York, NY', match: '85', exp: '10y', branch: 'ME', skills: ['Java', 'Spring'], trend: '0', status: 'Applied' },
+                            { rank: '#7', name: 'Lisa Simpson', loc: 'London, UK', match: '84', exp: '5y', branch: 'CSE', skills: ['C++', 'OpenGL'], trend: '+2', status: 'Applied' },
+                            { rank: '#8', name: 'Arthur Morgan', loc: 'Denver, CO', match: '82', exp: '8y', branch: 'CSE', skills: ['Ruby', 'Rails'], trend: '-2', status: 'Applied' },
+                            { rank: '#9', name: 'Kassandra Alexos', loc: 'Athens, GR', match: '81', exp: '4y', branch: 'ECE', skills: ['Django', 'AWS'], trend: '+1', status: 'Applied' },
+                            { rank: '#10', name: 'Wei Chen', loc: 'Shanghai, CN', match: '79', exp: '6y', branch: 'CSE', skills: ['Node', 'Redis'], trend: '0', status: 'Applied' },
+                            { rank: '#11', name: 'Sarah Miller', loc: 'Portland, OR', match: '78', exp: '5y', branch: 'IT', skills: ['PHP', 'Laravel'], trend: '+4', status: 'Applied' },
+                            { rank: '#12', name: 'Bruce Wayne', loc: 'Gotham City', match: '77', exp: '12y', branch: 'ME', skills: ['Python', 'C'], trend: '0', status: 'Applied' },
+                            { rank: '#13', name: 'Diana Prince', loc: 'Themyscira', match: '76', exp: '9y', branch: 'Arts', skills: ['Public Policy'], trend: '+1', status: 'Applied' },
+                            { rank: '#14', name: 'Tony Stark', loc: 'Malibu, CA', match: '75', exp: '15y', branch: 'EE', skills: ['AI', 'Robotics'], trend: '-5', status: 'Rejected' },
+                            { rank: '#15', name: 'Peter Parker', loc: 'Queens, NY', match: '72', exp: '1y', branch: 'CSE', skills: ['Swift'], trend: '+2', status: 'Applied' },
+                        ];
+
+                        candidates.forEach(c => {
+                            document.write(`
+                                <tr class="hover:bg-[#111111] transition-colors border-l-2 border-transparent">
+                                    <td class="p-md"><input type="checkbox" class="rounded border-[#27272A] bg-black text-primary focus:ring-primary"></td>
+                                    <td class="p-md"><span class="font-bold opacity-60 text-[11px]">${c.rank}</span></td>
+                                    <td class="p-md">
+                                        <div class="flex items-center gap-sm">
+                                            <div class="w-8 h-8 bg-[#1A1A1A] rounded border border-[#27272A] flex items-center justify-center text-[10px]">${c.name[0]}</div>
+                                            <div><p class="font-label-md text-[13px] font-bold">${c.name}</p><p class="text-[10px] opacity-50">${c.loc}</p></div>
+                                        </div>
+                                    </td>
+                                    <td class="p-md"><span class="font-bold text-[13px] text-on-surface">${c.match} Match</span></td>
+                                    <td class="p-md text-[12px]">${c.exp}</td>
+                                    <td class="p-md text-[12px]">${c.branch}</td>
+                                    <td class="p-md">
+                                        <div class="flex gap-xs">
+                                            ${c.skills.map(s => `<span class="bg-[#111111] border border-[#27272A] text-[10px] px-1.5 py-0.5 rounded">${s}</span>`).join('')}
+                                        </div>
+                                    </td>
+                                    <td class="p-md">
+                                        <div class="flex items-center gap-1 opacity-50">
+                                            <span class="text-[11px] font-bold">${c.trend}</span>
+                                        </div>
+                                    </td>
+                                    <td class="p-md text-right"><span class="text-[10px] font-bold bg-[#1A1A1A] text-[#A1A1AA] px-2 py-1 rounded">${c.status}</span></td>
+                                </tr>
+                            `);
+                        });
+                    </script>
+</tbody>
+</table>
+</section>
+<!-- Sticky Action Bar -->
+<div class="fixed bottom-lg left-1/2 -translate-x-1/2 bg-surface-container-high border border-primary px-xl py-md rounded-full flex items-center gap-xl shadow-2xl z-50 transform translate-y-24 transition-transform duration-300" id="sticky-bar">
+<div class="flex items-center gap-md">
+<span class="text-primary font-bold text-[13px]">Compare Selected (2)</span>
+</div>
+<div class="h-6 w-px bg-outline-variant"></div>
+<div class="flex gap-lg">
+<button class="text-on-surface font-label-md hover:text-primary transition-colors">Shortlist</button>
+<button class="text-on-surface font-label-md hover:text-primary transition-colors">Export CSV</button>
+<button class="bg-primary text-black px-lg py-xs rounded-full font-bold text-[12px]">Execute Multi-Action</button>
+</div>
+</div>
+</main>
+<!-- RIGHT PANEL: Detail Inspector -->
+<aside class="fixed right-0 top-0 h-full w-[320px] bg-[#111111] border-l border-[#27272A] flex flex-col z-50">
+<div class="p-lg border-b border-[#27272A]">
+<div class="flex justify-between items-start mb-md">
+<img alt="Detail Profile Marcus" class="w-16 h-16 rounded-lg border border-primary p-0.5" src="https://lh3.googleusercontent.com/aida-public/AB6AXuB3-r3B4E-8rAGLgMq0ThcLwzLdJYrht-w0SbKOwTc5fFekeJPhf11Djh2cueiwoH2IZi1Bi8KGGoRF817NQ0K73zOmT-GLOQx2BwzHgoKEelNojE7jvy762PMeQIC0pUSejY2B9qtWzJn348GkqrmR_y6qG08r-_YLo5eCSEUKxx1Wk_axNoHWbu65addQBiNmTbIksupgAbRz4LsZqz3if9h7DnZCXPWIwsjypacHG5wxJ3Rzsd9LefMqAWKRTEwY6ZDZeO_FAQ"/>
+<button class="text-[#A1A1AA] hover:text-white"><span class="material-symbols-outlined">close</span></button>
+</div>
+<h3 class="text-lg font-black text-on-surface">Marcus McKinley</h3>
+<p class="text-xs text-primary font-bold uppercase tracking-widest">Senior Backend Engineer</p>
+</div>
+<div class="flex-1 overflow-y-auto custom-scrollbar p-lg space-y-xl">
+<!-- Why Ranked #1 -->
+<section>
+<h4 class="text-[11px] font-bold text-primary uppercase mb-md">Why Ranked #1</h4>
+<div class="bg-[#1A1A1A] p-md rounded border border-primary/20 space-y-sm">
+<div class="flex items-center gap-sm text-[12px]">
+<span class="material-symbols-outlined !text-[16px] text-primary">check_circle</span>
+<span>Exceeds technical bar for Python (L6)</span>
+</div>
+<div class="flex items-center gap-sm text-[12px]">
+<span class="material-symbols-outlined !text-[16px] text-primary">check_circle</span>
+<span>Past experience at Tier-1 competitor</span>
+</div>
+<div class="flex items-center gap-sm text-[12px]">
+<span class="material-symbols-outlined !text-[16px] text-primary">check_circle</span>
+<span>Culture fit index: High (98%)</span>
+</div>
+<div class="flex items-center gap-sm text-[12px] opacity-50">
+<span class="material-symbols-outlined !text-[16px]">cancel</span>
+<span class="line-through">Available for immediate joining</span>
+</div>
+</div>
+</section>
+<!-- Match Breakdown -->
+<section>
+<h4 class="text-[11px] font-bold opacity-60 uppercase mb-md">Match Breakdown</h4>
+<div class="space-y-md">
+<div>
+<div class="flex justify-between text-[11px] mb-1"><span>Skills Profile</span><span class="text-primary">98%</span></div>
+<div class="w-full bg-[#1A1A1A] h-1 rounded-full overflow-hidden">
+<div class="bg-primary h-full w-[98%]"></div>
+</div>
+</div>
+<div>
+<div class="flex justify-between text-[11px] mb-1"><span>Project Complexity</span><span class="text-primary">92%</span></div>
+<div class="w-full bg-[#1A1A1A] h-1 rounded-full overflow-hidden">
+<div class="bg-primary h-full w-[92%]"></div>
+</div>
+</div>
+<div>
+<div class="flex justify-between text-[11px] mb-1"><span>Professional Exp</span><span class="text-primary">88%</span></div>
+<div class="w-full bg-[#1A1A1A] h-1 rounded-full overflow-hidden">
+<div class="bg-primary h-full w-[88%]"></div>
+</div>
+</div>
+<div>
+<div class="flex justify-between text-[11px] mb-1"><span>Culture Index</span><span class="text-primary">95%</span></div>
+<div class="w-full bg-[#1A1A1A] h-1 rounded-full overflow-hidden">
+<div class="bg-primary h-full w-[95%]"></div>
+</div>
+</div>
+</div>
+</section>
+<!-- Resume Summary -->
+<section>
+<h4 class="text-[11px] font-bold opacity-60 uppercase mb-sm">AI Resume Summary</h4>
+<p class="text-[12px] leading-relaxed opacity-80">
+                    Marcus is an architect-level developer with significant expertise in building distributed systems using Python and FastAPI. He has a proven track record of optimizing AWS infrastructure, reducing costs by 24% at his previous role.
+                </p>
+</section>
+<!-- Experience Timeline -->
+<section>
+<h4 class="text-[11px] font-bold opacity-60 uppercase mb-md">Professional Timeline</h4>
+<div class="space-y-lg border-l border-[#27272A] ml-2 pl-4">
+<div class="relative">
+<div class="absolute -left-[21px] top-1 w-2 h-2 bg-primary rounded-full"></div>
+<p class="text-[12px] font-bold">Lead Backend Engineer</p>
+<p class="text-[10px] opacity-60">Stripe • 2021 - Present</p>
+</div>
+<div class="relative opacity-60">
+<div class="absolute -left-[21px] top-1 w-2 h-2 bg-[#27272A] rounded-full border border-[#27272A]"></div>
+<p class="text-[12px] font-bold">Senior Software Engineer</p>
+<p class="text-[10px]">Airbnb • 2018 - 2021</p>
+</div>
+</div>
+</section>
+</div>
+<div class="p-lg border-t border-[#27272A] flex gap-md">
+<button class="flex-1 bg-primary text-black font-bold py-sm rounded text-[13px] hover:opacity-90 transition-opacity">Schedule Interview</button>
+<button class="w-12 bg-[#1A1A1A] border border-[#27272A] flex items-center justify-center rounded hover:border-primary transition-colors">
+<span class="material-symbols-outlined">mail</span>
+</button>
+</div>
+</aside>
+<script>
+        // Micro-interactions
+        const bar = document.getElementById('sticky-bar');
+        
+        // Show sticky bar when at least 2 boxes checked (Simulated)
+        setTimeout(() => {
+            bar.classList.remove('translate-y-24');
+        }, 1500);
+
+        // Hover effect for table rows
+        const rows = document.querySelectorAll('tbody tr');
+        rows.forEach(row => {
+            row.addEventListener('mouseenter', () => {
+                if(!row.classList.contains('border-primary')) {
+                    row.style.borderLeftColor = '#27272A';
+                }
+            });
+            row.addEventListener('mouseleave', () => {
+                if(!row.classList.contains('border-primary')) {
+                    row.style.borderLeftColor = 'transparent';
+                }
+            });
+        });
+    </script>
+</body></html>

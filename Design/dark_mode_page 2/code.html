@@ -1,0 +1,419 @@
+<!DOCTYPE html>
+
+<html class="dark" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Candidate Comparison | Recruiter OS</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+        tailwind.config = {
+            darkMode: "class",
+            theme: {
+                extend: {
+                    "colors": {
+                        "on-background": "#f6ded3",
+                        "on-error-container": "#ffdad6",
+                        "on-secondary-fixed-variant": "#45464e",
+                        "error": "#ffb4ab",
+                        "secondary-container": "#45464e",
+                        "surface-bright": "#45362f",
+                        "on-primary-fixed-variant": "#783200",
+                        "inverse-surface": "#f6ded3",
+                        "tertiary-fixed": "#cde5ff",
+                        "on-secondary-fixed": "#1a1b22",
+                        "background": "#1c110b",
+                        "outline-variant": "#584237",
+                        "on-primary": "#552100",
+                        "on-tertiary": "#003351",
+                        "on-secondary": "#2f3037",
+                        "surface-container-high": "#352720",
+                        "inverse-primary": "#9d4300",
+                        "surface-dim": "#1c110b",
+                        "surface-tint": "#ffb690",
+                        "on-primary-fixed": "#341100",
+                        "primary-fixed-dim": "#ffb690",
+                        "primary-container": "#f97316",
+                        "secondary": "#c6c6cf",
+                        "primary": "#ffb690",
+                        "on-tertiary-fixed": "#001d32",
+                        "surface-container-low": "#251913",
+                        "surface-container-lowest": "#160c06",
+                        "on-error": "#690005",
+                        "tertiary-fixed-dim": "#93ccff",
+                        "tertiary": "#93ccff",
+                        "error-container": "#93000a",
+                        "on-surface": "#f6ded3",
+                        "outline": "#a78b7d",
+                        "tertiary-container": "#00a2f4",
+                        "on-tertiary-fixed-variant": "#004b74",
+                        "primary-fixed": "#ffdbca",
+                        "inverse-on-surface": "#3c2d26",
+                        "on-secondary-container": "#b4b4bd",
+                        "secondary-fixed": "#e2e1eb",
+                        "surface-container": "#291d16",
+                        "secondary-fixed-dim": "#c6c6cf",
+                        "surface-container-highest": "#40322a",
+                        "on-tertiary-container": "#003554",
+                        "surface-variant": "#40322a",
+                        "on-primary-container": "#582200",
+                        "surface": "#1c110b",
+                        "on-surface-variant": "#e0c0b1"
+                    },
+                    "borderRadius": {
+                        "DEFAULT": "0.125rem",
+                        "lg": "0.25rem",
+                        "xl": "0.5rem",
+                        "full": "0.75rem"
+                    },
+                    "spacing": {
+                        "sm": "8px",
+                        "lg": "16px",
+                        "md": "12px",
+                        "base": "4px",
+                        "margin": "16px",
+                        "xs": "4px",
+                        "xl": "24px",
+                        "gutter": "12px"
+                    },
+                    "fontFamily": {
+                        "headline-sm-mobile": ["Inter"],
+                        "display-sm": ["Inter"],
+                        "body-md": ["Inter"],
+                        "label-md": ["Inter"],
+                        "headline-sm": ["Inter"],
+                        "label-xs": ["Inter"],
+                        "body-sm": ["Inter"]
+                    },
+                    "fontSize": {
+                        "headline-sm-mobile": ["16px", {"lineHeight": "22px", "fontWeight": "600"}],
+                        "display-sm": ["24px", {"lineHeight": "32px", "letterSpacing": "-0.02em", "fontWeight": "600"}],
+                        "body-md": ["14px", {"lineHeight": "20px", "fontWeight": "400"}],
+                        "label-md": ["12px", {"lineHeight": "16px", "letterSpacing": "0.02em", "fontWeight": "500"}],
+                        "headline-sm": ["18px", {"lineHeight": "24px", "letterSpacing": "-0.01em", "fontWeight": "600"}],
+                        "label-xs": ["11px", {"lineHeight": "14px", "fontWeight": "600"}],
+                        "body-sm": ["13px", {"lineHeight": "18px", "fontWeight": "400"}]
+                    }
+                },
+            },
+        }
+    </script>
+<style>
+        body {
+            background-color: #0A0A0A;
+            color: #f6ded3;
+            font-family: 'Inter', sans-serif;
+        }
+        .custom-scrollbar::-webkit-scrollbar { width: 4px; height: 4px; }
+        .custom-scrollbar::-webkit-scrollbar-track { background: #1c110b; }
+        .custom-scrollbar::-webkit-scrollbar-thumb { background: #584237; }
+        .comparison-row:nth-child(even) { background-color: rgba(255, 255, 255, 0.02); }
+        .material-symbols-outlined { font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24; }
+    </style>
+</head>
+<body class="overflow-hidden">
+<!-- Sidebar Navigation -->
+<nav class="fixed h-full w-[240px] left-0 top-0 bg-surface-container-low border-r border-outline-variant flex flex-col py-xl z-50">
+<div class="px-lg mb-xl">
+<h1 class="font-headline-sm text-headline-sm font-bold text-primary">Recruiter OS</h1>
+<p class="font-label-md text-label-md text-on-surface-variant opacity-60">Premium Edition</p>
+</div>
+<div class="flex-1 space-y-xs">
+<a class="flex items-center gap-md px-lg py-sm text-on-surface-variant hover:bg-surface-container-highest transition-colors duration-200" href="#">
+<span class="material-symbols-outlined">dashboard</span>
+<span class="font-label-md text-label-md">Dashboard</span>
+</a>
+<a class="flex items-center gap-md px-lg py-sm text-on-surface-variant hover:bg-surface-container-highest transition-colors duration-200" href="#">
+<span class="material-symbols-outlined">group</span>
+<span class="font-label-md text-label-md">Candidates</span>
+</a>
+<a class="flex items-center gap-md px-lg py-sm text-on-surface-variant hover:bg-surface-container-highest transition-colors duration-200" href="#">
+<span class="material-symbols-outlined">description</span>
+<span class="font-label-md text-label-md">Job Descriptions</span>
+</a>
+<a class="flex items-center gap-md px-lg py-sm border-l-2 border-primary bg-surface-container-high text-on-surface" href="#">
+<span class="material-symbols-outlined">compare_arrows</span>
+<span class="font-label-md text-label-md">Comparison</span>
+</a>
+<a class="flex items-center gap-md px-lg py-sm text-on-surface-variant hover:bg-surface-container-highest transition-colors duration-200" href="#">
+<span class="material-symbols-outlined">assessment</span>
+<span class="font-label-md text-label-md">Reports</span>
+</a>
+<a class="flex items-center gap-md px-lg py-sm text-on-surface-variant hover:bg-surface-container-highest transition-colors duration-200" href="#">
+<span class="material-symbols-outlined">settings</span>
+<span class="font-label-md text-label-md">Settings</span>
+</a>
+</div>
+<div class="mt-auto px-lg">
+<button class="w-full py-sm bg-primary text-on-primary font-label-md rounded flex items-center justify-center gap-xs">
+<span class="material-symbols-outlined text-[18px]">add</span>
+                New Search
+            </button>
+<div class="mt-xl pt-lg border-t border-outline-variant">
+<a class="flex items-center gap-md py-sm text-on-surface-variant hover:text-primary transition-colors" href="#">
+<span class="material-symbols-outlined">help_outline</span>
+<span class="font-label-md text-label-md">Help Center</span>
+</a>
+</div>
+</div>
+</nav>
+<!-- Main Content Area -->
+<main class="ml-[240px] h-screen flex flex-col overflow-hidden bg-[#0A0A0A]">
+<!-- Top App Bar -->
+<header class="flex justify-between items-center h-14 px-xl sticky top-0 z-40 bg-surface border-b border-outline-variant">
+<div class="flex items-center gap-xl">
+<div class="flex items-center gap-lg">
+<a class="font-label-md text-label-md text-on-surface-variant pb-sm hover:text-primary transition-colors" href="#">Candidates</a>
+<a class="font-label-md text-label-md text-on-surface-variant pb-sm hover:text-primary transition-colors" href="#">Pipelines</a>
+<a class="font-label-md text-label-md text-on-surface-variant pb-sm hover:text-primary transition-colors" href="#">Activity</a>
+</div>
+</div>
+<div class="flex items-center gap-lg">
+<div class="flex items-center gap-sm">
+<button class="p-xs text-on-surface-variant hover:text-primary transition-colors">
+<span class="material-symbols-outlined">history</span>
+</button>
+<button class="p-xs text-on-surface-variant hover:text-primary transition-colors relative">
+<span class="material-symbols-outlined">notifications</span>
+<span class="absolute top-0 right-0 w-2 h-2 bg-primary-container rounded-full"></span>
+</button>
+</div>
+<button class="px-md py-xs border border-outline text-on-surface font-label-md hover:bg-surface-container-highest transition-all">
+                    Invite Team
+                </button>
+<img alt="User Avatar" class="w-8 h-8 rounded-full border border-outline-variant" src="https://lh3.googleusercontent.com/aida-public/AB6AXuBtR0xE9BFvrGTDnSEoHxetBckVGN0uNsw4jbc6ZLnuKWpXWsKFikN6vJeNj-diQFkhg0qwEde_V5WzhqicdNUC6WHedvWYyr8cYkyCYFnQxzZMfiYwsjCsOmN1-mLNv3zwHk5pXmAytKg16NIC3PlcpJsZXcQZIIy0HjntAEqI638QMdhdvg_ZvlgLdObRrAC7Eq-zwuYPP83WQX3KNeXcIgNQCRgJh1adk_XzgO5MJJhuASqulwb516QalN7wrk-BuWsXOFucVg"/>
+</div>
+</header>
+<!-- Scrollable Canvas -->
+<div class="flex-1 overflow-y-auto custom-scrollbar p-xl space-y-xl">
+<!-- Recommendation Section -->
+<section class="grid grid-cols-1 lg:grid-cols-3 gap-xl">
+<div class="lg:col-span-2 relative overflow-hidden rounded bg-[#111111] border border-primary-container/30 p-xl flex gap-xl items-start">
+<div class="absolute top-0 left-0 w-1 h-full bg-primary-container"></div>
+<div class="flex-shrink-0">
+<div class="w-20 h-20 rounded-full border-4 border-primary-container flex items-center justify-center bg-surface-container-high relative">
+<span class="font-display-sm text-display-sm text-primary">98%</span>
+<div class="absolute -bottom-1 -right-1 bg-primary text-on-primary px-xs py-[2px] rounded text-[10px] font-bold">MATCH</div>
+</div>
+</div>
+<div class="space-y-sm">
+<div class="flex items-center gap-md">
+<span class="px-sm py-[2px] bg-primary-container/20 text-primary-container text-label-xs rounded uppercase font-bold tracking-wider">Recommended Candidate</span>
+<h2 class="font-headline-sm text-headline-sm">Marcus McKinley</h2>
+</div>
+<p class="font-body-md text-body-md text-on-surface max-w-2xl leading-relaxed">
+                            Marcus McKinley demonstrates the strongest alignment with core backend requirements and technical leadership potential. His architectural expertise in distributed systems and consistent history of scaling engineering teams makes him the primary choice for this role.
+                        </p>
+<div class="flex gap-md pt-sm">
+<button class="px-lg py-sm bg-primary text-on-primary font-label-md rounded hover:opacity-90 transition-opacity">Schedule Final Interview</button>
+<button class="px-lg py-sm border border-outline text-on-surface font-label-md rounded hover:bg-surface-container-highest transition-colors">Download Full Dossier</button>
+</div>
+</div>
+<div class="hidden xl:block flex-1">
+
+</div>
+</div>
+<div class="rounded bg-[#111111] border border-outline-variant p-xl flex flex-col justify-between">
+<div>
+<h3 class="font-label-md text-label-md text-on-surface-variant uppercase tracking-widest mb-md">Comparison Context</h3>
+<p class="font-headline-sm text-headline-sm leading-tight">Senior Principal Backend Engineer</p>
+<p class="font-body-sm text-body-sm text-on-surface-variant mt-sm">Req #992-B • Global Infrastructure Team</p>
+</div>
+<div class="pt-xl space-y-sm">
+<div class="flex justify-between font-label-xs text-label-xs text-on-surface-variant">
+<span>Analysis Precision</span>
+<span>High (99.4%)</span>
+</div>
+<div class="h-1 bg-surface-container-high rounded-full overflow-hidden">
+<div class="h-full bg-primary-container w-[99.4%]"></div>
+</div>
+</div>
+</div>
+</section>
+<!-- Comparison Matrix -->
+<section class="rounded border border-outline-variant bg-[#111111] overflow-hidden">
+<div class="grid grid-cols-4 border-b border-outline-variant">
+<div class="p-lg bg-surface-container-low flex flex-col justify-end">
+<span class="font-label-xs text-label-xs text-on-surface-variant uppercase tracking-widest">Comparison Metric</span>
+</div>
+<!-- Candidate A -->
+<div class="p-lg border-l border-outline-variant relative">
+<div class="absolute top-0 left-0 w-full h-1 bg-primary-container"></div>
+<div class="flex items-center gap-md">
+<img alt="Marcus McKinley" class="w-12 h-12 rounded bg-surface-container-high" data-alt="A professional studio portrait of Marcus McKinley, a senior software engineer in his late 30s with a focused expression. He is wearing a dark, minimal tech-focused charcoal sweater. The background is a sophisticated deep obsidian with subtle rim lighting reflecting the Recruiter OS brand colors. The photography is sharp and modern, capturing high-performance professional energy." src="https://lh3.googleusercontent.com/aida-public/AB6AXuBZnaZUY8VXkLvT3ihJyh3RUaYENmhqNsErwPL_vJNox4jQeDreJ-jqLnncZMA1wG_NX2hqSyNT1vgRLDSwThZzOKMUzKUS6HIAC3yuYpbffXSJSueRf_YFL3nZV_TVkIS5SRXqNohegARWIQPfSmSUwTgIGgv0rSgTCyW-J1ae9GhenEwrImgmYLHNmgXXk89mOSWLth0vxmkUqGqkvz5TXyWYcJ5Bm5rcthbh7nUdeLFQLXNN0YpplEoLG82AocTDTsJxpxI6tQ"/>
+<div>
+<h4 class="font-headline-sm text-headline-sm leading-none">Marcus McKinley</h4>
+<span class="text-primary font-label-md">Rank #1</span>
+</div>
+</div>
+</div>
+<!-- Candidate B -->
+<div class="p-lg border-l border-outline-variant">
+<div class="flex items-center gap-md">
+<img alt="Alexandria Thorne" class="w-12 h-12 rounded bg-surface-container-high" data-alt="A professional headshot of Alexandria Thorne, an experienced engineering manager with an authoritative and confident presence. She has short, styled hair and wears dark-framed glasses with a black blazer. The lighting is dramatic yet professional, utilizing a deep obsidian background with soft technical highlights. The overall mood is one of clinical efficiency and executive leadership." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCgpb0ULoa8tDWl5orhM202Ta3dHpfehFth5S_hqLDx01ysCclc1GgI5DJaxyHMk0tvdoSBG8xpywCWVI3BC1nVoB9qRWqQ75sDljfJ1s22f3g8LLLwJgJVVTbdGDxsX8EaBCSUtgWH6YsmzIta2mlHHRHQ8czqkoWFb0mLOr2rWSBIcIyQII3QZ6_6WJUO0TtDY6BD6Hg66LBQLO8itU57scLTMs7R07w62mKG3jGCE1zLYKvQz4X0VG6oDcSO9Ir42xiNX5WlWg"/>
+<div>
+<h4 class="font-headline-sm text-headline-sm leading-none">Alexandria Thorne</h4>
+<span class="text-on-surface-variant font-label-md">Rank #2</span>
+</div>
+</div>
+</div>
+<!-- Candidate C -->
+<div class="p-lg border-l border-outline-variant">
+<div class="flex items-center gap-md">
+<img alt="Jordan Dax" class="w-12 h-12 rounded bg-surface-container-high" data-alt="A crisp, high-end professional portrait of Jordan Dax, a young but highly skilled backend developer. He looks energetic and technically savvy, wearing a simple black t-shirt. The aesthetic matches a technical operating system feel with a dark background and precise, controlled lighting. The visual style is minimalist and high-performance, reflecting an elite tech talent profile." src="https://lh3.googleusercontent.com/aida-public/AB6AXuCWLLw73f0W8WzNvb3pPUqpOlSiVhP0cp6NPSSG5Dr4aXqz-dMCQffHAUvhmSRq1n0-4_YdMNybz7WS7pOdCO9HJN_pR3QUu31v6Km81BXTZkYURe4M4e_KFcfAgizS1nf5ZPkxYjWcttgvMz2EgIB4kz0Ih-AgiMTZkmPX_-YPV4kuQJcDeNec1a2pQw_3Cnz11EteoD-gj_jy00qZk2jIZO2_qW45BxWjq4D_Rm_jl6dDJ43C8FE3pVOlKLeY2X87Br2T5xL1fg"/>
+<div>
+<h4 class="font-headline-sm text-headline-sm leading-none">Jordan Dax</h4>
+<span class="text-on-surface-variant font-label-md">Rank #3</span>
+</div>
+</div>
+</div>
+</div>
+<!-- Comparison Rows -->
+<div class="divide-y divide-outline-variant">
+<!-- Match Score -->
+<div class="grid grid-cols-4 comparison-row">
+<div class="p-lg font-label-md text-on-surface-variant flex items-center">Match Score</div>
+<div class="p-lg border-l border-outline-variant">
+<div class="flex items-end justify-between mb-xs">
+<span class="text-primary font-bold text-headline-sm">98%</span>
+</div>
+<div class="h-1.5 w-full bg-surface-container-high rounded-full overflow-hidden">
+<div class="h-full bg-primary-container" style="width: 98%"></div>
+</div>
+</div>
+<div class="p-lg border-l border-outline-variant">
+<div class="flex items-end justify-between mb-xs">
+<span class="text-on-surface font-bold text-headline-sm">84%</span>
+</div>
+<div class="h-1.5 w-full bg-surface-container-high rounded-full overflow-hidden">
+<div class="h-full bg-on-surface-variant" style="width: 84%"></div>
+</div>
+</div>
+<div class="p-lg border-l border-outline-variant">
+<div class="flex items-end justify-between mb-xs">
+<span class="text-on-surface font-bold text-headline-sm">79%</span>
+</div>
+<div class="h-1.5 w-full bg-surface-container-high rounded-full overflow-hidden">
+<div class="h-full bg-on-surface-variant" style="width: 79%"></div>
+</div>
+</div>
+</div>
+<!-- Skills -->
+<div class="grid grid-cols-4 comparison-row">
+<div class="p-lg font-label-md text-on-surface-variant flex items-center">Skills</div>
+<div class="p-lg border-l border-outline-variant space-y-base">
+<span class="inline-block px-xs py-1 border border-primary-container/40 text-[10px] text-primary font-bold rounded">Go</span>
+<span class="inline-block px-xs py-1 border border-primary-container/40 text-[10px] text-primary font-bold rounded">Rust</span>
+<span class="inline-block px-xs py-1 border border-primary-container/40 text-[10px] text-primary font-bold rounded">Kubernetes</span>
+<span class="inline-block px-xs py-1 border border-primary-container/40 text-[10px] text-primary font-bold rounded">gRPC</span>
+</div>
+<div class="p-lg border-l border-outline-variant space-y-base">
+<span class="inline-block px-xs py-1 border border-outline-variant text-[10px] text-on-surface-variant rounded">Python</span>
+<span class="inline-block px-xs py-1 border border-outline-variant text-[10px] text-on-surface-variant rounded">AWS</span>
+<span class="inline-block px-xs py-1 border border-outline-variant text-[10px] text-on-surface-variant rounded">PostgreSQL</span>
+<span class="inline-block px-xs py-1 border border-outline-variant text-[10px] text-on-surface-variant rounded">Kafka</span>
+</div>
+<div class="p-lg border-l border-outline-variant space-y-base">
+<span class="inline-block px-xs py-1 border border-outline-variant text-[10px] text-on-surface-variant rounded">Java</span>
+<span class="inline-block px-xs py-1 border border-outline-variant text-[10px] text-on-surface-variant rounded">Spring Boot</span>
+<span class="inline-block px-xs py-1 border border-outline-variant text-[10px] text-on-surface-variant rounded">Redis</span>
+<span class="inline-block px-xs py-1 border border-outline-variant text-[10px] text-on-surface-variant rounded">Docker</span>
+</div>
+</div>
+<!-- Experience -->
+<div class="grid grid-cols-4 comparison-row">
+<div class="p-lg font-label-md text-on-surface-variant flex items-center">Experience</div>
+<div class="p-lg border-l border-outline-variant font-body-sm text-body-sm">
+<p class="font-bold">12 Years</p>
+<p class="text-on-surface-variant">L7 @ Google Cloud</p>
+</div>
+<div class="p-lg border-l border-outline-variant font-body-sm text-body-sm">
+<p class="font-bold">9 Years</p>
+<p class="text-on-surface-variant">Eng Manager @ Stripe</p>
+</div>
+<div class="p-lg border-l border-outline-variant font-body-sm text-body-sm">
+<p class="font-bold">6 Years</p>
+<p class="text-on-surface-variant">Sr. Engineer @ Uber</p>
+</div>
+</div>
+<!-- Strengths -->
+<div class="grid grid-cols-4 comparison-row">
+<div class="p-lg font-label-md text-on-surface-variant flex items-center">Strengths</div>
+<div class="p-lg border-l border-outline-variant text-body-sm space-y-xs">
+<div class="flex items-start gap-xs">
+<span class="material-symbols-outlined text-[14px] text-primary mt-1">check_circle</span>
+<span>Deep distributed systems knowledge</span>
+</div>
+<div class="flex items-start gap-xs">
+<span class="material-symbols-outlined text-[14px] text-primary mt-1">check_circle</span>
+<span>High technical throughput</span>
+</div>
+</div>
+<div class="p-lg border-l border-outline-variant text-body-sm space-y-xs">
+<div class="flex items-start gap-xs">
+<span class="material-symbols-outlined text-[14px] text-primary mt-1">check_circle</span>
+<span>Exceptional team mentor</span>
+</div>
+</div>
+<div class="p-lg border-l border-outline-variant text-body-sm space-y-xs">
+<div class="flex items-start gap-xs">
+<span class="material-symbols-outlined text-[14px] text-primary mt-1">check_circle</span>
+<span>Strong product intuition</span>
+</div>
+</div>
+</div>
+<!-- Hiring Risk -->
+<div class="grid grid-cols-4 comparison-row">
+<div class="p-lg font-label-md text-on-surface-variant flex items-center">Hiring Risk</div>
+<div class="p-lg border-l border-outline-variant">
+<span class="px-sm py-[2px] bg-green-900/20 text-green-400 text-label-xs rounded font-bold">LOW</span>
+</div>
+<div class="p-lg border-l border-outline-variant">
+<span class="px-sm py-[2px] bg-yellow-900/20 text-yellow-400 text-label-xs rounded font-bold">MEDIUM</span>
+</div>
+<div class="p-lg border-l border-outline-variant">
+<span class="px-sm py-[2px] bg-green-900/20 text-green-400 text-label-xs rounded font-bold">LOW</span>
+</div>
+</div>
+<!-- Salary & Notice -->
+<div class="grid grid-cols-4 comparison-row">
+<div class="p-lg font-label-md text-on-surface-variant flex items-center">Expectation / Notice</div>
+<div class="p-lg border-l border-outline-variant font-body-sm">
+<p class="font-bold text-primary">$240k • 2 Weeks</p>
+</div>
+<div class="p-lg border-l border-outline-variant font-body-sm">
+<p class="font-bold">$225k • 4 Weeks</p>
+</div>
+<div class="p-lg border-l border-outline-variant font-body-sm">
+<p class="font-bold">$190k • 2 Weeks</p>
+</div>
+</div>
+</div>
+</section>
+<!-- Bottom Action Row -->
+<div class="flex justify-end gap-md pb-xl">
+<button class="px-xl py-md border border-outline text-on-surface font-label-md rounded flex items-center gap-sm hover:bg-surface-container-highest transition-colors">
+<span class="material-symbols-outlined">share</span>
+                    Share Comparison Report
+                </button>
+<button class="px-xl py-md bg-primary text-on-primary font-label-md rounded flex items-center gap-sm hover:opacity-90 transition-opacity">
+<span class="material-symbols-outlined">send</span>
+                    Send Selection for Approval
+                </button>
+</div>
+</div>
+</main>
+<script>
+        // Simple micro-interaction for rows
+        document.querySelectorAll('.comparison-row').forEach(row => {
+            row.addEventListener('mouseenter', () => {
+                row.classList.add('bg-white/[0.04]');
+            });
+            row.addEventListener('mouseleave', () => {
+                row.classList.remove('bg-white/[0.04]');
+            });
+        });
+    </script>
+</body></html>
