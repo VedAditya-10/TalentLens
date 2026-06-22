@@ -12,6 +12,64 @@ from services.ranker import rerank_candidates_for_jd
 router = APIRouter(prefix="/match", tags=["matching"])
 
 
+def sanitize_profile_for_llm(profile: dict) -> dict:
+    """
+    Sanitizes candidate JSON profile fields to filter out potential prompt injections
+    (abnormally long strings or instruction keywords) before sending to the LLM.
+    """
+    forbidden_keywords = {"ignore", "override", "instruction", "prompt", "rubric", "score", "shortlist"}
+    
+    def clean_text(text: str, max_len: int) -> str:
+        if not text:
+            return ""
+        text = str(text)[:max_len].strip()
+        # Check for injection attempts
+        lower_text = text.lower()
+        if any(kw in lower_text for kw in forbidden_keywords):
+            return "[Redacted due to safety filter]"
+        return text
+
+    sanitized = {
+        "name": clean_text(profile.get("name", ""), 100) or "Unknown",
+        "branch": clean_text(profile.get("branch", ""), 100),
+        "skills": [],
+        "experience": [],
+        "education": []
+    }
+
+    # Clean skills (must be short tags, typically < 60 chars)
+    skills = profile.get("skills") or []
+    if isinstance(skills, list):
+        for skill in skills:
+            cleaned = clean_text(str(skill), 60)
+            if cleaned and cleaned != "[Redacted due to safety filter]":
+                sanitized["skills"].append(cleaned)
+
+    # Clean experience dicts
+    experience = profile.get("experience") or []
+    if isinstance(experience, list):
+        for exp in experience:
+            if isinstance(exp, dict):
+                sanitized["experience"].append({
+                    "role": clean_text(exp.get("role", ""), 100),
+                    "company": clean_text(exp.get("company", ""), 100),
+                    "duration": clean_text(exp.get("duration", ""), 50)
+                })
+
+    # Clean education dicts
+    education = profile.get("education") or []
+    if isinstance(education, list):
+        for edu in education:
+            if isinstance(edu, dict):
+                sanitized["education"].append({
+                    "degree": clean_text(edu.get("degree", ""), 100),
+                    "institution": clean_text(edu.get("institution", ""), 100),
+                    "year": clean_text(edu.get("year", ""), 50)
+                })
+
+    return sanitized
+
+
 async def _run_single_match(
     candidate_id: uuid.UUID,
     jd_id: uuid.UUID,
@@ -47,13 +105,14 @@ async def _run_single_match(
         raise HTTPException(status_code=404, detail=f"Job description {jd_id} not found")
 
     # Build candidate profile for prompt
-    candidate_profile = {
+    raw_profile = {
         "name": candidate.name,
         "skills": analysis.extracted_skills,
         "experience": analysis.extracted_experience,
         "education": analysis.extracted_education,
         "branch": candidate.branch,
     }
+    candidate_profile = sanitize_profile_for_llm(raw_profile)
 
     # Call OpenRouter
     try:

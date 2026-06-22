@@ -9,9 +9,16 @@ Base.metadata.create_all(bind=engine)
 
 # Run migrations to add new columns if they do not exist
 from sqlalchemy import text
-with engine.begin() as conn:
-    conn.execute(text("ALTER TABLE match_records ADD COLUMN IF NOT EXISTS interview_remarks TEXT"))
-    conn.execute(text("ALTER TABLE match_records ADD COLUMN IF NOT EXISTS interview_outcome VARCHAR DEFAULT 'Pending'"))
+import logging
+
+logger = logging.getLogger(__name__)
+
+try:
+    with engine.begin() as conn:
+        conn.execute(text("ALTER TABLE match_records ADD COLUMN IF NOT EXISTS interview_remarks TEXT"))
+        conn.execute(text("ALTER TABLE match_records ADD COLUMN IF NOT EXISTS interview_outcome VARCHAR DEFAULT 'Pending'"))
+except Exception as e:
+    logger.warning(f"Self-migration check completed or skipped: {e}")
 
 app = FastAPI(
     title="TalentLens API",
