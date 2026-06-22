@@ -13,17 +13,12 @@ router = APIRouter(prefix="/match", tags=["matching"])
 
 
 def sanitize_profile_for_llm(profile: dict) -> dict:
-    """
-    Sanitizes candidate JSON profile fields to filter out potential prompt injections
-    (abnormally long strings or instruction keywords) before sending to the LLM.
-    """
     forbidden_keywords = {"ignore", "override", "instruction", "prompt", "rubric", "score", "shortlist"}
     
     def clean_text(text: str, max_len: int) -> str:
         if not text:
             return ""
         text = str(text)[:max_len].strip()
-        # Check for injection attempts
         lower_text = text.lower()
         if any(kw in lower_text for kw in forbidden_keywords):
             return "[Redacted due to safety filter]"
@@ -37,7 +32,6 @@ def sanitize_profile_for_llm(profile: dict) -> dict:
         "education": []
     }
 
-    # Clean skills (must be short tags, typically < 60 chars)
     skills = profile.get("skills") or []
     if isinstance(skills, list):
         for skill in skills:
@@ -45,7 +39,6 @@ def sanitize_profile_for_llm(profile: dict) -> dict:
             if cleaned and cleaned != "[Redacted due to safety filter]":
                 sanitized["skills"].append(cleaned)
 
-    # Clean experience dicts
     experience = profile.get("experience") or []
     if isinstance(experience, list):
         for exp in experience:
@@ -56,7 +49,6 @@ def sanitize_profile_for_llm(profile: dict) -> dict:
                     "duration": clean_text(exp.get("duration", ""), 50)
                 })
 
-    # Clean education dicts
     education = profile.get("education") or []
     if isinstance(education, list):
         for edu in education:
@@ -76,8 +68,6 @@ async def _run_single_match(
     db: Session,
     force: bool = False,
 ) -> MatchRecord:
-    """Core matching logic: check cache → call LLM → save → return record."""
-    # Return cached result if it already exists and force is False
     if not force:
         existing = (
             db.query(MatchRecord)
@@ -87,7 +77,6 @@ async def _run_single_match(
         if existing:
             return existing
 
-    # Fetch candidate + analysis
     candidate = db.query(Candidate).filter(Candidate.id == candidate_id).first()
     if not candidate:
         raise HTTPException(status_code=404, detail=f"Candidate {candidate_id} not found")
@@ -99,12 +88,10 @@ async def _run_single_match(
             detail=f"Candidate {candidate_id} has no AI analysis. Re-upload the resume first.",
         )
 
-    # Fetch JD
     jd = db.query(JobDescription).filter(JobDescription.id == jd_id).first()
     if not jd:
         raise HTTPException(status_code=404, detail=f"Job description {jd_id} not found")
 
-    # Build candidate profile for prompt
     raw_profile = {
         "name": candidate.name,
         "skills": analysis.extracted_skills,
@@ -114,7 +101,6 @@ async def _run_single_match(
     }
     candidate_profile = sanitize_profile_for_llm(raw_profile)
 
-    # Call OpenRouter
     try:
         result = await score_match(
             candidate_json=candidate_profile,
@@ -125,7 +111,6 @@ async def _run_single_match(
     except APITimeoutError:
         raise HTTPException(status_code=504, detail="AI scoring timed out. Please try again.")
 
-    # Preserve existing remarks/outcome if they exist before deleting
     existing_remarks = None
     existing_outcome = "Pending"
     existing_rec = db.query(MatchRecord).filter(
@@ -135,13 +120,11 @@ async def _run_single_match(
         existing_remarks = existing_rec.interview_remarks
         existing_outcome = existing_rec.interview_outcome or "Pending"
 
-    # Delete existing match record if we are forcing recalculation
     db.query(MatchRecord).filter(
         MatchRecord.candidate_id == candidate_id, MatchRecord.jd_id == jd_id
     ).delete()
     db.flush()
 
-    # Save match record
     record = MatchRecord(
         candidate_id=candidate_id,
         jd_id=jd_id,
@@ -175,11 +158,9 @@ async def match_bulk(data: BulkMatchRequest, force: bool = False, db: Session = 
         try:
             record = await _run_single_match(candidate_id, data.jd_id, db, force=force)
             results.append(record)
-        except HTTPException as e:
-            # Log and continue for bulk — don't abort entire batch
+        except HTTPException:
             continue
     rerank_candidates_for_jd(data.jd_id, db)
-    # Refresh all records to get updated ranks
     for r in results:
         db.refresh(r)
     return results
@@ -207,7 +188,6 @@ def get_ranked_candidates(
 
     records = query.order_by(MatchRecord.rank.asc().nullslast()).all()
 
-    # Apply candidate-level filters after join
     if branch:
         records = [r for r in records if r.candidate.branch and branch.lower() in r.candidate.branch.lower()]
     if gender:

@@ -3,11 +3,6 @@ from models import MatchRecord
 
 
 def rerank_candidates_for_jd(jd_id, db: Session) -> None:
-    """
-    Re-rank all candidates for a given JD by match_score descending.
-    Updates the rank column for every affected match record.
-    Called after every single match and bulk match operation.
-    """
     records = (
         db.query(MatchRecord)
         .filter(MatchRecord.jd_id == jd_id)

@@ -4,10 +4,8 @@ from config import settings
 from database import engine, Base
 from routers import candidates, jds, match, compare
 
-# Create all tables on startup (Alembic handles migrations in production)
 Base.metadata.create_all(bind=engine)
 
-# Run migrations to add new columns if they do not exist
 from sqlalchemy import text
 import logging
 
@@ -26,7 +24,6 @@ app = FastAPI(
     version="1.0.0",
 )
 
-# CORS — env-driven origins + regex matching for Vercel preview domains & localhost
 app.add_middleware(
     CORSMiddleware,
     allow_origins=settings.cors_origins,
@@ -36,7 +33,6 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# Include routers
 app.include_router(candidates.router)
 app.include_router(jds.router)
 app.include_router(match.router)

@@ -6,21 +6,12 @@ from docx import Document
 
 logger = logging.getLogger(__name__)
 
-# If pdfplumber returns less than this many characters across the whole PDF,
-# we assume the PDF is scanned (image-only) and fall back to OCR.
 OCR_FALLBACK_CHAR_THRESHOLD = 50
-# Resolution for rasterizing pages before OCR. 200 DPI is a good speed/accuracy
-# tradeoff for typical 8.5x11 / A4 resumes.
 OCR_DPI = 200
-# Cap OCR on very long PDFs to keep latency bounded. If a resume is somehow
-# longer than this many pages, we only OCR the first N pages.
 OCR_MAX_PAGES = 20
 
 
 def _configure_tesseract(pytesseract_module):
-    """
-    Configure pytesseract path on Windows if the standard installation exists.
-    """
     import os
     default_win_tesseract = r"C:\Program Files\Tesseract-OCR\tesseract.exe"
     if os.name == "nt" and os.path.exists(default_win_tesseract):
@@ -28,18 +19,9 @@ def _configure_tesseract(pytesseract_module):
 
 
 def _ocr_pdf_pages(file_bytes: bytes) -> str:
-    """
-    Rasterize each page of a PDF and run Tesseract OCR on it.
-    Returns the concatenated text across pages.
-
-    Raises ImportError if pytesseract/pdf2image aren't installed.
-    Raises RuntimeError if the Tesseract binary is missing.
-    """
-    # Lazy imports so the module is importable even when OCR deps are not
-    # installed locally (e.g. developer running backend outside Docker).
     try:
-        import pytesseract  # type: ignore
-        from pdf2image import convert_from_bytes  # type: ignore
+        import pytesseract
+        from pdf2image import convert_from_bytes
     except ImportError as e:
         raise ImportError(
             "OCR dependencies (pytesseract, pdf2image) are not installed. "
@@ -51,8 +33,6 @@ def _ocr_pdf_pages(file_bytes: bytes) -> str:
     try:
         images = convert_from_bytes(file_bytes, dpi=OCR_DPI, last_page=OCR_MAX_PAGES)
     except Exception as e:
-        # convert_from_bytes raises various exceptions depending on the cause
-        # (missing poppler, corrupted PDF, password-protected, etc.).
         raise RuntimeError(f"Failed to rasterize PDF for OCR: {e}") from e
 
     text_parts: list[str] = []
@@ -78,11 +58,6 @@ def _ocr_pdf_pages(file_bytes: bytes) -> str:
 
 
 def extract_text_from_pdf(file_bytes: bytes) -> str:
-    """
-    Extract text from a PDF. Tries pdfplumber first (fast, accurate for
-    text-based PDFs). If the result is empty or suspiciously short, falls
-    back to Tesseract OCR for scanned/image-based PDFs.
-    """
     text_parts: list[str] = []
     try:
         with pdfplumber.open(io.BytesIO(file_bytes)) as pdf:
@@ -91,8 +66,6 @@ def extract_text_from_pdf(file_bytes: bytes) -> str:
                 if page_text:
                     text_parts.append(page_text)
     except Exception as e:
-        # Corrupted or password-protected PDF, etc. Don't fail outright —
-        # OCR might still recover something.
         logger.warning(f"pdfplumber failed to read PDF ({e}); will try OCR")
         text_parts = []
 
@@ -115,9 +88,6 @@ def extract_text_from_docx(file_bytes: bytes) -> str:
 
 
 def extract_text_from_image(file_bytes: bytes) -> str:
-    """
-    Extract text from a resume image (PNG, JPG, JPEG) using Tesseract OCR.
-    """
     try:
         from PIL import Image
         import pytesseract

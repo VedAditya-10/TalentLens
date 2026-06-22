@@ -16,7 +16,6 @@ ALLOWED_EXTENSIONS = {".pdf", ".docx", ".png", ".jpg", ".jpeg"}
 
 @router.post("/upload", response_model=CandidateDetail)
 async def upload_resume(file: UploadFile = File(...), db: Session = Depends(get_db)):
-    # Validate file type
     filename = file.filename or ""
     ext = "." + filename.rsplit(".", 1)[-1].lower() if "." in filename else ""
     if ext not in ALLOWED_EXTENSIONS:
@@ -27,16 +26,12 @@ async def upload_resume(file: UploadFile = File(...), db: Session = Depends(get_
 
     file_bytes = await file.read()
 
-    # Extract raw text
     from fastapi.concurrency import run_in_threadpool
     try:
         resume_text = await run_in_threadpool(extract_text, filename, file_bytes)
     except ValueError as e:
         raise HTTPException(status_code=422, detail=str(e))
     except RuntimeError as e:
-        # Raised by the OCR fallback when Tesseract binary is missing or
-        # the PDF can't be rasterized. Surface as a 422 so the frontend
-        # can show a meaningful message instead of a generic 500.
         raise HTTPException(status_code=422, detail=f"PDF processing failed: {e}")
 
     if not resume_text.strip():
@@ -44,13 +39,11 @@ async def upload_resume(file: UploadFile = File(...), db: Session = Depends(get_
             status_code=422, detail="Could not extract any text from the uploaded file."
         )
 
-    # Call OpenRouter to extract structured data
     try:
         extraction = await extract_resume_data(resume_text)
     except APITimeoutError:
         raise HTTPException(status_code=504, detail="AI extraction timed out. Please try again.")
 
-    # Create candidate record
     candidate = Candidate(
         name=extraction.get("name") or "Unknown",
         email=extraction.get("email"),
@@ -61,9 +54,8 @@ async def upload_resume(file: UploadFile = File(...), db: Session = Depends(get_
         resume_filename=filename,
     )
     db.add(candidate)
-    db.flush()  # get candidate.id before creating analysis
+    db.flush()
 
-    # Create AI analysis record
     analysis = AIAnalysis(
         candidate_id=candidate.id,
         extracted_skills=extraction.get("skills", []),

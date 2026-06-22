@@ -80,7 +80,6 @@ Required Skills: {required_skills}"""
 
 
 def _parse_json_response(text: str) -> Dict[str, Any]:
-    """Extract and parse JSON from LLM response text."""
     text = text.strip()
     if text.startswith("```"):
         lines = text.split("\n")
@@ -89,7 +88,6 @@ def _parse_json_response(text: str) -> Dict[str, Any]:
 
 
 async def _call_llm(prompt: str) -> str:
-    """Call OpenRouter (pinned to Google Vertex) and return the response text."""
     response = await client.chat.completions.create(
         model=settings.openrouter_model,
         messages=[{"role": "user", "content": prompt}],
@@ -104,14 +102,7 @@ async def _call_llm(prompt: str) -> str:
     return response.choices[0].message.content or ""
 
 
-
 async def extract_resume_data(resume_text: str) -> Dict[str, Any]:
-    """
-    Call OpenRouter to extract structured data from resume text.
-    Retries once with a stricter prompt on JSON parse failure.
-    On second failure, returns a flagged error dict.
-    """
-    # Replace XML brackets to prevent tag breakout prompt injections
     safe_resume_text = (resume_text or "").replace("<", "[").replace(">", "]")
     prompt = RESUME_EXTRACTION_PROMPT.format(resume_text=safe_resume_text)
 
@@ -136,12 +127,6 @@ async def score_match(
     jd_description: str,
     required_skills: list,
 ) -> Dict[str, Any]:
-    """
-    Call OpenRouter to score a candidate against a job description.
-    Retries once with a stricter prompt on JSON parse failure.
-    On second failure, returns a structured error response.
-    """
-    # Replace XML brackets in serialized candidate profile to prevent tag breakout
     serialized_profile = json.dumps(candidate_json, indent=2)
     safe_profile = serialized_profile.replace("<", "[").replace(">", "]")
 
