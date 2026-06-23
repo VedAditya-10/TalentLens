@@ -4,6 +4,24 @@ AI-powered recruitment platform powered by OpenRouter. Upload resumes, create jo
 
 ---
 
+## Live Deployments :
+
+*   **Link**: [https://talent-lens-frontend.vercel.app](https://talent-lens-frontend.vercel.app)
+*   Frontend: Vercel | Backend: Render | Database: Neon | Uptimerobot: Cron-job.org
+
+---
+
+## Production Deployment Architecture
+
+The application is deployed across optimised hosting environments:
+
+1.  **Frontend (Vercel)**: Serves the Next.js client layout. Leverages Vercel's Edge network for low latency, rapid rendering, and automatic branch preview deployments.
+2.  **Backend (Render + Docker)**: Runs the FastAPI server inside a customized Docker container. A Docker host is utilised because image-based text parsing relies on underlying system binaries (`tesseract-ocr` and `poppler-utils`) for OCR and PDF rasterisation, which are not installable in standard serverless Python runtimes.
+3.  **Database (Neon Serverless PostgreSQL)**: Handles data storage with dynamic database scaling.
+4.  **Uptime Keep-Alive (cron-job.org)**: Since Render's free tier spins down containers after 15 minutes of inactivity (causing cold start delays), a cron service pings the backend `/health` endpoint every 10 minutes to keep the container warmed up and highly responsive.
+
+---
+
 ## Architecture
 
 ```
