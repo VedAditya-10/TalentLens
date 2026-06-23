@@ -1,13 +1,5 @@
 # TalentLens
-
 AI-powered recruitment platform powered by OpenRouter. Upload resumes, create job descriptions, and get AI-generated match scores with detailed reasoning, skill gap analysis, and auto-ranked candidate shortlists.
-
----
-
-## Live Deployments :
-
-*   **Link**: [https://talent-lens-frontend.vercel.app](https://talent-lens-frontend.vercel.app)
-*   Frontend: Vercel | Backend: Render | Database: Neon | Uptimerobot: Cron-job.org
 
 ---
 
